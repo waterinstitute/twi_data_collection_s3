@@ -1,0 +1,13 @@
+#development requirements
+black
+bandit
+pre-commit
+#app requirements
+boto3
+pandas
+geopandas
+shapely
+contextily
+click
+arcgis
+pyyaml
