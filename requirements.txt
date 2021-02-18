@@ -11,3 +11,4 @@ contextily
 click
 arcgis
 pyyaml
+descartes

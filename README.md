@@ -20,7 +20,37 @@ aws_access_key_id = <the minio access key>
 aws_secret_access_key = <the minio secret key>
 ```
 
+Once installed (i.e. the src path is part of the PYTHONPATH), you can use the module as follows:
 
+```bash
+python -m metadata_collector --help
+Usage: python -m metadata_collector [OPTIONS]
+
+  This app will collect the metadata from the buckets for a project and
+  create the feature-class map with them.
+
+Options:
+  --project TEXT                  Id of the project, default: TEST  [default:
+                                  TEST]
+
+  --process_all                   Process all the documents, ignoring the
+                                  already seen lists  [default: False]
+
+  -b, --bucket TEXT               the bucket to scan (optional if you provide
+                                  the project name), you can use multiple
+                                  buckets using: -b bucket1 -b bucket2 ...
+
+  -o, --output_format [GeoJSON|GPKG|Shapefile|CSV]
+                                  [default: GeoJSON]
+  --output_name TEXT              output name without extension (will be added
+                                  according to the format)  [default: output]
+
+  --generate_plot                 generate a plot of the map  [default: False]
+  --hucs_gdb PATH                 [default: ./data/hucs.gdb]
+  --help                          Show this message and exit.
+```
+
+It requires the hucs.gdb file (or a shapefile), you can set the path using the option `--hucs_gdb <the file location>`, or it will try to use the default location.
 
 ## Development environment
 
@@ -46,7 +76,20 @@ pre-commit install
 
  the first time you clone your project.
 
-For test we use minio. Make sure to start the server, pointing to the appropriated folder, before testing.
+For test, we use [MinIO](https://min.io). Make sure to start the server, pointing to the appropriated folder, before testing. We can add a minio binary to the virtual environment  for convenience:
+
+```bash
+cd .venv/bin
+wget https://dl.min.io/server/minio/release/linux-amd64/minio
+```
+
+Then, from the project root, we could start the server using:
+
+```bash
+minio server a_test_folder 2>&1 >logs/minio.log &
+```
+
+In MinIO, the folders on the test folders will be used as buckets.
 
 ## Development standards
 
