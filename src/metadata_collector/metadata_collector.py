@@ -18,8 +18,6 @@ try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-
-
 _TEST_ENDPOINT = "http://localhost:9000"
 _DEFAULT_BUCKETS = {
     "GLO": ["glo-data"],
@@ -75,52 +73,59 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
             _pdf = pd.concat(map(pd.read_csv, hash_files))
             already_seen = _pdf.metadata_hash.to_list()
     s3 = boto3.resource("s3", **kargs)
+    metadata_list = []
+    metadata_files = []
     for b in buckets:
-        s3_bucket = s3.Bucket(b)
-        metadata_files = [
-            f"{x.key}"
-            for x in s3_bucket.objects.all()
-            if any(
-                map(
-                    x.key.__contains__,
-                    [
-                        "metadata.yml",
-                        "metadata-external.yml",
-                        "metadata.yaml",
-                        "metadata-external.yaml",
-                    ],
-                )
+        try:
+            s3_bucket = s3.Bucket(b)
+            metadata_files.extend(
+                [
+                    f"{x.key}"
+                    for x in s3_bucket.objects.all()
+                    if any(
+                        map(
+                            x.key.__contains__,
+                            [
+                                "metadata.yml",
+                                "metadata-external.yml",
+                                "metadata.yaml",
+                                "metadata-external.yaml",
+                            ],
+                        )
+                    )
+                ]
             )
-        ]
-        metadata_list = []
-        for mfile in metadata_files:
-            obj = s3_bucket.Object(mfile).get()
-            content = obj["Body"].read()
-            metadata_gen = yaml.load_all(content, Loader=Loader)
-            folder = f"s3://{s3_bucket.name}/{mfile[:mfile.rfind('/')+1]}"
-            try:
-                for document in metadata_gen:
-                    if isinstance(document, list):
-                        for d in document:
-                            d["metadata_hash"] = hash_doc(d)
-                            d["metadata_folder"] = folder
-                        metadata_list.extend(document)
-                    else:
-                        document["metadata_hash"] = hash_doc(document)
-                        document["metadata_folder"] = folder
-                        metadata_list.append(document)
-            except yaml.error.YAMLError:
-                print(
-                    f"Invalid syntax on s3://{s3_bucket.name}{mfile}, the dataset(s) defined on it will be ignored"
-                )
-                continue
-        metadata_df = pd.json_normalize(metadata_list)
-        metadata_df.drop(
-            metadata_df[metadata_df.metadata_hash.isin(already_seen)].index,
-            inplace=True,
-        )
-        # If all the datasets has been already seen, exit.
-        return metadata_df
+        except:
+            print(f"Error reading {b}")
+
+    for mfile in metadata_files:
+        obj = s3_bucket.Object(mfile).get()
+        content = obj["Body"].read()
+        metadata_gen = yaml.load_all(content, Loader=Loader)
+        folder = f"s3://{s3_bucket.name}/{mfile[:mfile.rfind('/')+1]}"
+        try:
+            for document in metadata_gen:
+                if isinstance(document, list):
+                    for d in document:
+                        d["metadata_hash"] = hash_doc(d)
+                        d["metadata_folder"] = folder
+                    metadata_list.extend(document)
+                else:
+                    document["metadata_hash"] = hash_doc(document)
+                    document["metadata_folder"] = folder
+                    metadata_list.append(document)
+        except yaml.error.YAMLError:
+            print(
+                f"Invalid syntax on s3://{s3_bucket.name}{mfile}, the dataset(s) defined on it will be ignored"
+            )
+            continue
+    metadata_df = pd.json_normalize(metadata_list)
+    metadata_df.drop(
+        metadata_df[metadata_df.metadata_hash.isin(already_seen)].index, inplace=True
+    )
+
+    # If all the datasets has been already seen, exit.
+    return metadata_df
 
 
 def generate_geodataframe(

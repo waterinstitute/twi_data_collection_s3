@@ -47,6 +47,19 @@ Options:
 
   --generate_plot                 generate a plot of the map  [default: False]
   --hucs_gdb PATH                 [default: ./data/hucs.gdb]
+  --agol_credentials TEXT         a json including  username,  password,
+                                  endpoint (optional, will use the twiotg
+                                  instance by default),  folder (optional,
+                                  will use / by default), and  tags
+                                  (optional). example:
+
+                                  --agol_credentials '{   "username":
+                                  "theUsername",   "password": "thePassword",
+                                  "endpoint":
+                                  "https://theagolinstance.maps.arcmap.com",
+                                  "folder": "/",   "tags": ["map", "metadata"]
+                                  }'
+
   --help                          Show this message and exit.
 ```
 
@@ -90,6 +103,14 @@ minio server a_test_folder 2>&1 >logs/minio.log &
 ```
 
 In MinIO, the folders on the test folders will be used as buckets.
+
+Also, when activating the environment again, in a new session, you may get a message indicating that GDAL_DATA is not set, to avoid this you can add this line to the `.venv/bin/activate` script:
+
+```bash
+export GDAL_DATA=$VIRTUAL_ENV/lib/python3.8/site-packages/fiona/gdal_data/
+```
+
+
 
 ## Development standards
 

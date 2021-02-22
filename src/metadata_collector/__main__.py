@@ -1,13 +1,17 @@
+#!/usr/env python
 import os
 import click
+import json
+import matplotlib.pyplot as plt
+import contextily as ctx
 from functools import partial
+
 from metadata_collector.metadata_collector import (
     generate_geodataframe,
     get_metadata_from_buckets,
     load_gdb,
 )
-import matplotlib.pyplot as plt
-import contextily as ctx
+from metadata_collector.agol_utils import post_gdf_to_agol
 
 click.option = partial(click.option, show_default=True)
 
@@ -40,8 +44,36 @@ click.option = partial(click.option, show_default=True)
 )
 @click.option("--generate_plot", is_flag=True, help="generate a plot of the map")
 @click.option("--hucs_gdb", default="./data/hucs.gdb", type=click.Path(exists=True))
+@click.option(
+    "--agol_credentials",
+    default=None,
+    help="""
+a json including
+username,
+password,
+endpoint (optional, will use the twiotg instance by default),
+folder (optional, will use / by default), and
+tags (optional).
+example:
+
+--agol_credentials '{
+  "username": "theUsername",
+  "password": "thePassword",
+  "endpoint": "https://theagolinstance.maps.arcmap.com",
+  "folder": "/",
+  "tags": ["map", "metadata"]
+}'
+""",
+)
 def metadata_collector(
-    project, process_all, buckets, output_name, output_format, generate_plot, hucs_gdb
+    project,
+    process_all,
+    buckets,
+    output_name,
+    output_format,
+    generate_plot,
+    hucs_gdb,
+    agol_credentials,
 ):
     """
     This app will collect the metadata from the buckets for a project
@@ -66,12 +98,26 @@ def metadata_collector(
         file_extension = output_format.lower()
     metadata_gdf.to_file(f"{output_name}.{file_extension}", driver=output_format)
     if generate_plot:
-        # all the rows should have the same projection, so this change should be either enforced by policy or made beforehand
+        # all the rows should have the same projection,
+        # so this change should be either enforced by policy or made beforehand
         tmp = metadata_gdf.set_crs(crs="EPSG:4326")
         # to match with the ctx map, we should use web mercator projection:
         ax = tmp.to_crs(epsg=3857).plot(figsize=(100, 100), alpha=0.5)
         ctx.add_basemap(ax)
         plt.savefig(f"{output_name}.png")
+    if agol_credentials:
+        try:
+            credentials = json.loads(agol_credentials)
+            post_gdf_to_agol(
+                gdf=metadata_gdf, feature_layer_name="datasets_metadata", **credentials
+            )
+        except json.decoder.JSONDecodeError:
+            click.echo(
+                f"""
+            There was an error reading the
+            agol_credentials
+            {agol_credentials}"""
+            )
 
 
 metadata_collector()
