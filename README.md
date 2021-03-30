@@ -23,8 +23,8 @@ aws_secret_access_key = <the minio secret key>
 Once installed (i.e. the src path is part of the PYTHONPATH), you can use the module as follows:
 
 ```bash
-python -m metadata_collector --help
-Usage: python -m metadata_collector [OPTIONS]
+python -m metadata_collector collect --help
+Usage: python -m metadata_collector collect [OPTIONS]
 
   This app will collect the metadata from the buckets for a project and
   create the feature-class map with them.
@@ -64,6 +64,24 @@ Options:
 ```
 
 It requires the hucs.gdb file (or a shapefile), you can set the path using the option `--hucs_gdb <the file location>`, or it will try to use the default location.
+### Translate a CSDGM file to a YAML in the format used by the collector
+
+
+```bash
+Usage: python -m metadata_collector translate [OPTIONS] SOURCE_FILE
+
+  Translates a xml file with metadata in format CSDGM to a YAML file with
+  the format used by the collector.
+
+Options:
+  --target_file FILENAME  Output file. By default it will be metadata.yaml in
+                          the same directory of the source file
+
+  --schema_file FILENAME  Schema file  [default:
+                          conf/metadata.jsonschema.json]
+
+  --help                  Show this message and exit.
+```
 
 ## Development environment
 

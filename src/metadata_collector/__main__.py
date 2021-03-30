@@ -15,7 +15,7 @@ from metadata_collector.metadata_collector import (
     get_metadata_from_buckets,
     load_gdb,
 )
-from metadata_collector.translate_metadata import convert_csdmg_xml_to_twi_yaml
+from metadata_collector.translate_metadata import convert_csdgm_xml_to_twi_yaml
 
 click.option = partial(click.option, show_default=True)
 
@@ -148,10 +148,10 @@ def metadata_collector(
 )
 def convert_xml_yaml_metadata(source_file, target_file, schema_file):
     """
-    Translates a xml file with metadata in format CSDMG
+    Translates a xml file with metadata in format CSDGM
     to a YAML file with the format used by the collector.
     """
-    convert_csdmg_xml_to_twi_yaml(source_file, target=target_file, schema=schema_file)
+    convert_csdgm_xml_to_twi_yaml(source_file, target=target_file, schema=schema_file)
 
 
 if __name__ == "__main__":

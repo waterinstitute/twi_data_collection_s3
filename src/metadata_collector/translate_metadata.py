@@ -1,5 +1,5 @@
 """
-Translate a XML CSDMG metadata file to the
+Translate a XML CSDGM metadata file to the
 YAML format used by the data collector.
 author: Christian Ariza
 """
@@ -154,10 +154,10 @@ def dot2object(dotted_dict):
     return obj
 
 
-def convert_csdmg_xml_to_twi_yaml(
+def convert_csdgm_xml_to_twi_yaml(
     source_file, target=None, schema="metadata.jsonschema.json"
 ):
-    """Convert a CSDMG XML metadata file to a Yaml file with the desired format."""
+    """Convert a CSDGM XML metadata file to a Yaml file with the desired format."""
     if not target:
         parent = (
             Path(
