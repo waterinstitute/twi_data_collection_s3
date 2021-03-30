@@ -1,23 +1,25 @@
-import json
+"""
+Collect the metadata from AWS S3 (or similar) datastores
+and generates the feature class with it.
+"""
 import glob
-import yaml
-import datetime
-import boto3  # aws client api
-from botocore.client import Config
-import requests
-import pandas as pd
-from urllib.parse import urlparse
+import json
 from hashlib import sha3_256
+from urllib.parse import urlparse
+
+import boto3  # aws client api
+import geopandas
+import pandas as pd
+import yaml
+from botocore.client import Config
 
 # to work with maps:
-from shapely import wkt, ops
-import geopandas
-import contextily as ctx
+from shapely import ops, wkt
 
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CLoader as Loader
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import Loader
 _TEST_ENDPOINT = "http://localhost:9000"
 _DEFAULT_BUCKETS = {
     "GLO": ["glo-data"],
@@ -26,7 +28,7 @@ _DEFAULT_BUCKETS = {
 }
 
 
-def huc2geometry(x, hucs_gdf):
+def huc2geometry(huc_code, hucs_gdf):
     """
     If the code is huc_8 returns the geometry from the hucs_gdf.
     If it is a huc 4 or 6, it returns the union of the geometries of the matching rows.
@@ -35,15 +37,14 @@ def huc2geometry(x, hucs_gdf):
         hucs_gdf: a geodataframe with the necessary hucs
         it needs to have.
     """
-    if pd.isna(x):
+    if pd.isna(huc_code):
         return None
-    huc_s = str(int(x))
+    huc_s = str(int(huc_code))
     huc_type = len(huc_s)
     if huc_type == 8:
         return hucs_gdf.loc[hucs_gdf.HUC_8 == huc_s].geometry.values[0]
-    else:
-        values = hucs_gdf.loc[hucs_gdf[f"HUC_{huc_type}"] == huc_s].geometry.values
-        return ops.unary_union(values)
+    values = hucs_gdf.loc[hucs_gdf[f"HUC_{huc_type}"] == huc_s].geometry.values
+    return ops.unary_union(values)
 
 
 def hash_doc(doc):
@@ -75,9 +76,9 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
     s3 = boto3.resource("s3", **kargs)
     metadata_list = []
     metadata_files = []
-    for b in buckets:
+    for _b in buckets:
         try:
-            s3_bucket = s3.Bucket(b)
+            s3_bucket = s3.Bucket(_b)
             metadata_files.extend(
                 [
                     f"{x.key}"
@@ -95,20 +96,20 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
                     )
                 ]
             )
-        except:
-            print(f"Error reading {b}")
+        except Exception:
+            print(f"Error reading {_b}")
 
     for mfile in metadata_files:
         obj = s3_bucket.Object(mfile).get()
         content = obj["Body"].read()
         metadata_gen = yaml.load_all(content, Loader=Loader)
-        folder = f"s3://{s3_bucket.name}/{mfile[:mfile.rfind('/')+1]}"
+        folder = f"s3://{s3_bucket.name}.s3.amazonaws.com/{s3_bucket.name}/{mfile[:mfile.rfind('/')+1]}"
         try:
             for document in metadata_gen:
                 if isinstance(document, list):
-                    for d in document:
-                        d["metadata_hash"] = hash_doc(d)
-                        d["metadata_folder"] = folder
+                    for _d in document:
+                        _d["metadata_hash"] = hash_doc(_d)
+                        _d["metadata_folder"] = folder
                     metadata_list.extend(document)
                 else:
                     document["metadata_hash"] = hash_doc(document)
@@ -143,8 +144,10 @@ def generate_geodataframe(
         if not metadata_df
         else metadata_df
     )
-    metadata_df["limits"] = metadata_df.bounds_wkt.apply(
-        lambda x: wkt.loads(x) if pd.notnull(x) else None
+    metadata_df["limits"] = (
+        metadata_df.bounds_wkt.apply(lambda x: wkt.loads(x) if pd.notnull(x) else None)
+        if "bounds_wkt" in metadata_df
+        else None
     )
     if "bounds_huc" in metadata_df and hucs_gdf is not None and not hucs_gdf.empty:
         metadata_df["limits"] = metadata_df.apply(
@@ -164,7 +167,7 @@ def generate_geodataframe(
     metadata_gdf = metadata_gdf.drop(
         columns=["limits", "bounds_wkt"], errors="ignore"
     )  # ignore if they don't exists
-    metadata = metadata_gdf.set_crs(crs="EPSG:4326")
+    metadata_gdf = metadata_gdf.set_crs(crs="EPSG:4326")
     if "measurements" in metadata_gdf:
         metadata_gdf["measurements"] = metadata_gdf["measurements"].apply(
             lambda x: json.dumps(x, default=str) if x is not None else None
@@ -177,4 +180,11 @@ def generate_geodataframe(
 
 
 def load_gdb(gdb):
-    return geopandas.read_file(gdb)
+    """
+    Load the geodatabase with the region boundaries
+    """
+    gdf = geopandas.read_file(gdb)
+    if gdf.empty:  # probably is using the USGS dataset
+        gdf = geopandas.read_file(gdb, layer="WBDHU8")
+        gdf = gdf.rename(columns={"HUC8": "HUC_8"})
+    return gdf

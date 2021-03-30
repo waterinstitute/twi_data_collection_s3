@@ -1,22 +1,34 @@
 #!/usr/env python
-import os
-import click
+"""
+Define the cli interface for the data collector utilities
+"""
 import json
-import matplotlib.pyplot as plt
-import contextily as ctx
 from functools import partial
 
+import click
+import contextily as ctx
+import matplotlib.pyplot as plt
+
+from metadata_collector.agol_utils import post_gdf_to_agol
 from metadata_collector.metadata_collector import (
     generate_geodataframe,
     get_metadata_from_buckets,
     load_gdb,
 )
-from metadata_collector.agol_utils import post_gdf_to_agol
+from metadata_collector.translate_metadata import convert_csdmg_xml_to_twi_yaml
 
 click.option = partial(click.option, show_default=True)
 
 
-@click.command()
+@click.group(
+    help="""This utility groups the commands
+used in the data collection projects"""
+)
+def cli():
+    """Placeholder method for the click group"""
+
+
+@cli.command("collect")
 @click.option("--project", default="TEST", help="Id of the project, default: TEST")
 @click.option(
     "--process_all",
@@ -102,8 +114,8 @@ def metadata_collector(
         # so this change should be either enforced by policy or made beforehand
         tmp = metadata_gdf.set_crs(crs="EPSG:4326")
         # to match with the ctx map, we should use web mercator projection:
-        ax = tmp.to_crs(epsg=3857).plot(figsize=(100, 100), alpha=0.5)
-        ctx.add_basemap(ax)
+        _ax = tmp.to_crs(epsg=3857).plot(figsize=(100, 100), alpha=0.5)
+        ctx.add_basemap(_ax)
         plt.savefig(f"{output_name}.png")
     if agol_credentials:
         try:
@@ -120,4 +132,27 @@ def metadata_collector(
             )
 
 
-metadata_collector()
+@cli.command("translate")
+@click.argument("source_file", type=click.File("r"))
+@click.option(
+    "--target_file",
+    type=click.File("w"),
+    help="""Output file.
+    By default it will be metadata.yaml in the same directory of the source file""",
+)
+@click.option(
+    "--schema_file",
+    type=click.File("r"),
+    help="Schema file",
+    default="conf/metadata.jsonschema.json",
+)
+def convert_xml_yaml_metadata(source_file, target_file, schema_file):
+    """
+    Translates a xml file with metadata in format CSDMG
+    to a YAML file with the format used by the collector.
+    """
+    convert_csdmg_xml_to_twi_yaml(source_file, target=target_file, schema=schema_file)
+
+
+if __name__ == "__main__":
+    cli()

@@ -1,5 +1,7 @@
-from arcgis import GeoAccessor, GIS
-import geopandas as gpd
+"""
+Utilities to work with Arcgis online
+"""
+from arcgis import GIS, GeoAccessor
 
 
 def post_gdf_to_agol(
@@ -21,5 +23,5 @@ def post_gdf_to_agol(
         arcgis_ga.spatial.to_featurelayer(
             feature_layer_name, tags=tags, folder=folder, gis=gis
         )
-    except Exception as e:
-        print(f"error publishing to AGOL {str(e)}")
+    except Exception as _e:
+        print(f"error publishing to AGOL {str(_e)}")

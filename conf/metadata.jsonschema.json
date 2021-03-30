@@ -1,0 +1,830 @@
+{
+	"$id": "http://example.com/example.json",
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"default": {},
+	"description": "This metadata file will describe one (geographical related) dataset.",
+	"examples": [{
+		"global_attributes": {
+			"title": "CEOS Data Cube Landsat Surface Reflectance",
+			"summary": "Landsat 8 Operational Land Imager ARD prepared by NASA on behalf of CEOS.",
+			"source": "LaSRC surface reflectance product prepared using USGS Collection 1 data.",
+			"institution": "CEOS",
+			"instrument": "OLI_TIRS",
+			"cdm_data_type": "Grid",
+			"keywords": "AU/GA,NASA/GSFC/SED/ESD/LANDSAT,REFLECTANCE,ETM+,TM,OLI,EARTH SCIENCE",
+			"keywords_vocabulary": "GCMD",
+			"platform": "LANDSAT_8",
+			"processing_level": "L2",
+			"product_version": "2.0.0",
+			"product_suite": "USGS Landsat Collection 1",
+			"project": "CEOS",
+			"coverage_content_type": "physicalMeasurement",
+			"references": "http://dx.doi.org/10.3334/ORNLDAAC/1146",
+			"license": "https://creativecommons.org/licenses/by/4.0/",
+			"naming_authority": "gov.usgs",
+			"acknowledgment": "Landsat data is provided by the United States Geological Survey (USGS).",
+			"topic": "Imagery and base maps",
+			"start_date": 20210106,
+			"end_date": 20210106,
+			"creation_date": 20210111,
+			"published_date": 20210112,
+			"crs": "EPSG:4326"
+		},
+		"bounds_wkt": "MultiPolygon (((-99.01244262644466687 29.68847714169181984, -99.01260000000000616 29.68850000000000122, -99.00405966608576591 29.72230390603985484, -98.99370927257297126 29.76327229595236545, -98.64920488997823611 31.12687164657319272, -98.6396011275921154 31.16488475994666985, -98.63030000000000541 31.20169999999999888, -98.63011103786386968 31.20167254176426752, -96.72060000000000457 30.92419999999999902, -96.72841089687504734 30.89548010871237338, -97.12329597297051009 29.44352694148999205, -97.13100000000000023 29.41519999999999868, -99.01244262644466687 29.68847714169181984)))",
+		"bounds_huc": 80000000,
+		"index_location": "s3://landsat-pds/c1/L8/027/039/LO08_L1TP_027039_20201106_20201111_01_T1/index.html",
+		"metadata_contacts": {
+			"name": "Christian Ariza",
+			"email": "carizaporras@NOTSPAMTWI.org",
+			"role": "user"
+		},
+		"measurements": [{
+				"name": "coastal_aerosol",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band1",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 0.43-0.45 microns (Coastal Aerosol)",
+					"alias": "band_1"
+				}
+			},
+			{
+				"name": "blue",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band2",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 0.45-0.51 microns (Blue)",
+					"alias": "band_2"
+				}
+			},
+			{
+				"name": "green",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band3",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 0.53-0.59 microns (Green)",
+					"alias": "band_4"
+				}
+			},
+			{
+				"name": "red",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band4",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 0.64-0.67 microns (Red)",
+					"alias": "band_4"
+				}
+			},
+			{
+				"name": "nir",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band5",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 0.85-0.88 microns (Near Infrared)",
+					"alias": "band_5"
+				}
+			},
+			{
+				"name": "swir1",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band6",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 1.57-1.65 microns (Short-wave Infrared)",
+					"alias": "band_6"
+				}
+			},
+			{
+				"name": "swir2",
+				"dtype": "int16",
+				"nodata": -9999,
+				"resampling_method": "nearest",
+				"src_varname": "sr_band7",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Surface Reflectance 2.11-2.29 microns (Short-wave Infrared)",
+					"alias": "band_7"
+				}
+			},
+			{
+				"name": "pixel_qa",
+				"dtype": "int32",
+				"nodata": 1,
+				"resampling_method": "nearest",
+				"src_varname": "pixel_qa",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Pixel Quality Attributes Bit Index",
+					"alias": [
+						"pixel_qa"
+					]
+				}
+			},
+			{
+				"name": "aerosol_qa",
+				"dtype": "uint8",
+				"nodata": 0,
+				"resampling_method": "nearest",
+				"src_varname": "sr_aerosol",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Aerosol Quality Attributes Bit Index",
+					"alias": [
+						"sr_aerosol_qa",
+						"sr_aerosol"
+					]
+				}
+			},
+			{
+				"name": "radsat_qa",
+				"dtype": "int32",
+				"nodata": 1,
+				"resampling_method": "nearest",
+				"src_varname": "radsat_qa",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Radiometric Saturation Quality Attributes Bit Index",
+					"alias": [
+						"radsat_qa"
+					]
+				}
+			},
+			{
+				"name": "solar_azimuth",
+				"dtype": "int16",
+				"nodata": -32768,
+				"resampling_method": "nearest",
+				"src_varname": "solar_azimuth_band4",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Solar Azimuth Angle for Band 4",
+					"alias": [
+						"solar_azimuth_band4"
+					]
+				}
+			},
+			{
+				"name": "solar_zenith",
+				"dtype": "int16",
+				"nodata": -32768,
+				"resampling_method": "nearest",
+				"src_varname": "solar_zenith_band4",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Solar Zenith Angle for Band 4",
+					"alias": [
+						"solar_zenith_band4"
+					]
+				}
+			},
+			{
+				"name": "sensor_azimuth",
+				"dtype": "int16",
+				"nodata": -32768,
+				"resampling_method": "nearest",
+				"src_varname": "sensor_azimuth_band4",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Sensor Azimuth Angle for Band 4",
+					"alias": [
+						"sensor_azimuth_band4"
+					]
+				}
+			},
+			{
+				"name": "sensor_zenith",
+				"dtype": "int16",
+				"nodata": -32768,
+				"resampling_method": "nearest",
+				"src_varname": "sensor_zenith_band4",
+				"zlib": true,
+				"attrs": {
+					"long_name": "Sensor Zenith Angle for Band 4",
+					"alias": [
+						"sensor_zenith_band4"
+					]
+				}
+			}
+		],
+		"lineage": {
+			"description": "",
+			"source": "<URI for the source file>",
+			"process": "LaSRC"
+		}
+	}],
+	"required": [
+		"global_attributes",
+		"index_location",
+		"metadata_contacts",
+		"measurements",
+		"lineage"
+	],
+	"anyOf": [{
+			"required": ["bounds_huc"]
+		},
+		{
+			"required": ["bounds_wkt"]
+		}
+	],
+	"title": "Dataset Metadata",
+	"type": "object",
+	"options":{"remove_empty_properties":true},
+	"properties": {
+		"global_attributes": {
+			"$id": "#/properties/global_attributes",
+			"type": "object",
+			"title": "Global attributes",
+			"description": "General information about the dataset",
+			"default": {},
+			"examples": [{
+				"title": "CEOS Data Cube Landsat Surface Reflectance",
+				"summary": "Landsat 8 Operational Land Imager ARD prepared by NASA on behalf of CEOS.",
+				"source": "LaSRC surface reflectance product prepared using USGS Collection 1 data.",
+				"institution": "CEOS",
+				"instrument": "OLI_TIRS",
+				"cdm_data_type": "Grid",
+				"keywords": "AU/GA,NASA/GSFC/SED/ESD/LANDSAT,REFLECTANCE,ETM+,TM,OLI,EARTH SCIENCE",
+				"keywords_vocabulary": "GCMD",
+				"platform": "LANDSAT_8",
+				"processing_level": "L2",
+				"product_version": "2.0.0",
+				"product_suite": "USGS Landsat Collection 1",
+				"project": "CEOS",
+				"coverage_content_type": "physicalMeasurement",
+				"references": "http://dx.doi.org/10.3334/ORNLDAAC/1146",
+				"license": "https://creativecommons.org/licenses/by/4.0/",
+				"naming_authority": "gov.usgs",
+				"acknowledgment": "Landsat data is provided by the United States Geological Survey (USGS).",
+				"topic": "Imagery and base maps",
+				"start_date": 20210106,
+				"end_date": 20210106,
+				"creation_date": 20210111,
+				"published_date": 20210112,
+				"crs": "EPSG:4326"
+			}],
+			"required": [
+				"title",
+				"summary",
+				"source",
+				"institution",
+				"cdm_data_type",
+				"keywords",
+				"keywords_vocabulary",
+				"project",
+				"coverage_content_type",
+				"references",
+				"license",
+				"naming_authority",
+				"acknowledgment",
+				"topic",
+				"start_date",
+				"end_date",
+				"creation_date",
+				"published_date",
+				"crs"
+			],
+			"properties": {
+				"title": {
+					"$id": "#/properties/global_attributes/properties/title",
+					"type": "string",
+					"title": "Title of the dataset",
+					"description": "Title of the dataset, it should be unique as it is used to show the dataset on the AGOL instance.",
+					"default": "",
+					"minLength": 5,
+					"maxLength": 512,
+					"examples": [
+						"CEOS Data Cube Landsat Surface Reflectance"
+					]
+				},
+				"summary": {
+					"$id": "#/properties/global_attributes/properties/summary",
+					"type": "string",
+					"title": "Summary",
+					"minLength": 5,
+					"maxLength": 2048,
+					"description": "A summary, description of the dataset and purpose",
+					"default": "",
+					"examples": [
+						"Landsat 8 Operational Land Imager ARD prepared by NASA on behalf of CEOS."
+					]
+				},
+				"source": {
+					"$id": "#/properties/global_attributes/properties/source",
+					"type": "string",
+					"title": "Source",
+					"minLength": 5,
+					"description": "Source of the dataset.",
+					"default": "",
+					"examples": [
+						"LaSRC surface reflectance product prepared using USGS Collection 1 data."
+					]
+				},
+				"institution": {
+					"$id": "#/properties/global_attributes/properties/institution",
+					"type": "string",
+					"title": "Institution",
+					"minLength": 1,
+					"description": "source institution of the dataset",
+					"default": "",
+					"examples": [
+						"CEOS"
+					]
+				},
+				"instrument": {
+					"$id": "#/properties/global_attributes/properties/instrument",
+					"type": "string",
+					"title": "instrument",
+					"description": "Instrument (e.g. sensor) used to take this measurements",
+					"examples": [
+						"OLI_TIRS"
+					]
+				},
+				"cdm_data_type": {
+					"$id": "#/properties/global_attributes/properties/cdm_data_type",
+					"type": "string",
+					"title": "cdm_data_type",
+					"description": "The dataset data type (following the THREDDS convention, this list includes non-standard data types)",
+					"enum": ["Grid", "Image", "Point", "Radial", "Station", "Swath", "Trajectory", "TimeSeries", "DATA COLLECTION BUNDLE", "Vector", "Others"],
+					"examples": [
+						"Grid"
+					]
+				},
+				"keywords": {
+					"$id": "#/properties/global_attributes/properties/keywords",
+					"type": "string",
+					"title": "keywords",
+					"minLength": 1,
+					"description": "A comma separated list of keywords, based on the selected vocabulary",
+					"default": "",
+					"examples": [
+						"AU/GA,NASA/GSFC/SED/ESD/LANDSAT,REFLECTANCE,ETM+,TM,OLI,EARTH SCIENCE"
+					]
+				},
+				"keywords_vocabulary": {
+					"$id": "#/properties/global_attributes/properties/keywords_vocabulary",
+					"type": "string",
+					"title": "keywords_vocabulary",
+					"description": "The data vocabulary used to select the keywords, e.g GCMD https://earthdata.nasa.gov/earth-observation-data/find-data/gcmd/gcmd-keywords",
+					"default": "GCMD",
+					"enum": ["GCMD", "ISO 19115 Topic Category", "USGS Thesaurus"],
+					"examples": [
+						"GCMD"
+					]
+				},
+				"platform": {
+					"$id": "#/properties/global_attributes/properties/platform",
+					"type": "string",
+					"title": "platform",
+					"description": "Platform this product belongs to.",
+					"default": "",
+					"examples": [
+						"LANDSAT_8"
+					]
+				},
+				"processing_level": {
+					"$id": "#/properties/global_attributes/properties/processing_level",
+					"type": "string",
+					"title": "processing_level",
+					"description": "If defined, processing level of this dataset",
+					"default": "",
+					"examples": [
+						"L2"
+					]
+				},
+				"product_version": {
+					"$id": "#/properties/global_attributes/properties/product_version",
+					"type": "string",
+					"title": "product_version",
+					"description": "product version",
+					"default": "",
+					"examples": [
+						"2.0.0"
+					]
+				},
+				"product_suite": {
+					"$id": "#/properties/global_attributes/properties/product_suite",
+					"type": "string",
+					"title": "product_suite",
+					"description": "If any, product suite this dataset belongs to",
+					"default": "",
+					"examples": [
+						"USGS Landsat Collection 1"
+					]
+				},
+				"project": {
+					"$id": "#/properties/global_attributes/properties/project",
+					"type": "string",
+					"title": "Project",
+					"description": "The project this dataset  creation is framed on",
+					"default": "",
+					"examples": [
+						"CEOS"
+					]
+				},
+				"coverage_content_type": {
+					"$id": "#/properties/global_attributes/properties/coverage_content_type",
+					"type": "string",
+					"title": "Coverage content type",
+					"description": "Coverage content type of the dataset",
+					"enum": ["image", "thematicClassification", "physicalMeasurement", "auxiliaryInformation", "qualityInformation", "referenceInformation", "modelResult", "coordinate"],
+					"default": "image",
+					"examples": [
+						"physicalMeasurement"
+					]
+				},
+				"references": {
+					"$id": "#/properties/global_attributes/properties/references",
+					"type": "string",
+					"title": "references",
+					"description": "Link or other information about the citation references",
+					"examples": [
+						"http://dx.doi.org/10.3334/ORNLDAAC/1146"
+					]
+				},
+				"license": {
+					"$id": "#/properties/global_attributes/properties/license",
+					"type": "string",
+					"title": "license",
+					"description": "License and usage restriction information (usually a link to the license file)",
+					"default": "https://creativecommons.org/licenses/by/4.0/",
+					"examples": [
+						"https://creativecommons.org/licenses/by/4.0/"
+					]
+				},
+				"naming_authority": {
+					"$id": "#/properties/global_attributes/properties/naming_authority",
+					"type": "string",
+					"title": "naming_authority",
+					"description": "The organization that provides the initial id of the dataset, usually a reverse-dns URI, ex: gov.usgs",
+					"default": "",
+					"examples": [
+						"gov.usgs"
+					]
+				},
+				"acknowledgment": {
+					"$id": "#/properties/global_attributes/properties/acknowledgment",
+					"type": "string",
+					"title": "acknowledgment",
+					"description": "Required acknowledgments",
+					"default": "",
+					"examples": [
+						"Landsat data is provided by the United States Geological Survey (USGS)."
+					]
+				},
+				"topic": {
+					"$id": "#/properties/global_attributes/properties/topic",
+					"type": "string",
+					"title": "topic",
+					"description": "High-level geospatial data thematic classification, defined in ISO 19115:2003.",
+					"enum": ["farming", "biota", "boundaries", "climatologyMeteorologyAtmosphere", "economy", "elevation", "environment", "geoscientificInformation", "health", "imageryBaseMapsEarthCover", "intelligenceMilitary", "inlandWaters", "location", "oceans", "planningCadastre", "society", "structure", "transportation", "utilitiesCommunication", "others"],
+					"examples": [
+						"imageryBaseMapsEarthCover"
+					]
+				},
+				"start_date": {
+					"$id": "#/properties/global_attributes/properties/start_date",
+					"type": "string",
+					"title": "start_date",
+					"description": "Start date of the period represented by the data",
+					"format": "date",
+					"minLength":1,
+					"default": "2021-01-06",
+					"examples": [
+						20210106
+					]
+				},
+				"end_date": {
+					"$id": "#/properties/global_attributes/properties/end_date",
+					"type": "string",
+					"title": "end_date",
+					"minLength":1,
+					"description": "End date of the period represented by the data",
+					"format": "date",
+					"examples": [
+						"20210106"
+					]
+				},
+				"creation_date": {
+					"$id": "#/properties/global_attributes/properties/creation_date",
+					"type": "string",
+					"title": "creation_date",
+					"minLength":1,
+					"format": "date",
+					"description": "When the dataset was created?",
+					"examples": [
+						20210111
+					]
+				},
+				"published_date": {
+					"$id": "#/properties/global_attributes/properties/published_date",
+					"type": "string",
+					"format": "date",
+					"minLength":1,
+					"title": "published_date",
+					"description": "When the dataset was published (on the source)?",
+					"examples": [
+						20210112
+					]
+				},
+				"crs": {
+					"$id": "#/properties/global_attributes/properties/crs",
+					"type": "string",
+					"title": "crs",
+					"minLength":1,
+					"description": "Coordinate reference system, e.g. EPSG:4326",
+					"default": "EPSG:4326",
+					"examples": [
+						"EPSG:4326"
+					]
+				}
+			},
+			"additionalProperties": true
+		},
+		"bounds_wkt": {
+			"$id": "#/properties/bounds_wkt",
+			"type": "string",
+			"title": "Bounds WKT",
+			"description": "A WKT (Well Known Text) expression representing the polygon of the bounds of this dataset (optional if bounds_huc is set)",
+			"examples": [
+				"MultiPolygon (((-99.01244262644466687 29.68847714169181984, -99.01260000000000616 29.68850000000000122, -99.00405966608576591 29.72230390603985484, -98.99370927257297126 29.76327229595236545, -98.64920488997823611 31.12687164657319272, -98.6396011275921154 31.16488475994666985, -98.63030000000000541 31.20169999999999888, -98.63011103786386968 31.20167254176426752, -96.72060000000000457 30.92419999999999902, -96.72841089687504734 30.89548010871237338, -97.12329597297051009 29.44352694148999205, -97.13100000000000023 29.41519999999999868, -99.01244262644466687 29.68847714169181984)))"
+			]
+		},
+		"bounds_huc": {
+			"$id": "#/properties/bounds_huc",
+			"description": "The huc8 (4 or 6) that describe this dataset bounds (optional if bounds_wkt is defined)",
+			"examples": [
+				80000000
+			],
+			"minLength":4,
+			"maxLength":8,
+			"title": "Bounds huc",
+			"type": "string"
+		},
+		"index_location": {
+			"$id": "#/properties/index_location",
+			"type": "string",
+			"title": "index_location",
+			"description": "The location of the index or main file of this dataset. It can be a full URL, or a relative path in the dataset folder.",
+			"default": "./index.html",
+			"examples": [
+				"s3://landsat-pds/c1/L8/027/039/LO08_L1TP_027039_20201106_20201111_01_T1/index.html"
+			]
+		},
+		"metadata_contacts": {
+			"$id": "#/properties/metadata_contacts",
+			"type": "object",
+			"title": "metadata_contacts",
+			"description": "An explanation about the purpose of this instance.",
+			"default": {},
+			"examples": [{
+				"name": "Christian Ariza",
+				"email": "carizaporras@NOTSPAMTWI.org",
+				"role": "user"
+			}],
+			"required": [
+				"name",
+				"email",
+				"role"
+			],
+			"properties": {
+				"name": {
+					"$id": "#/properties/metadata_contacts/properties/name",
+					"type": "string",
+					"title": "name",
+					"minLength":1,
+					"description": "An explanation about the purpose of this instance.",
+					"default": "",
+					"examples": [
+						"Christian Ariza"
+					]
+				},
+				"email": {
+					"$id": "#/properties/metadata_contacts/properties/email",
+					"type": "string",
+					"title": "email",
+					"description": "An explanation about the purpose of this instance.",
+					"minLength":1,
+					"format":"email",
+					"examples": [
+						"carizaporras@NOTSPAMTWI.org"
+					]
+				},
+				"role": {
+					"$id": "#/properties/metadata_contacts/properties/role",
+					"type": "string",
+					"title": "role",
+					"description": "An explanation about the purpose of this instance.",
+					"default": "",
+					"examples": [
+						"user"
+					]
+				}
+			},
+			"additionalProperties": true
+		},
+		"measurements": {
+			"$id": "#/properties/measurements",
+			"type": "array",
+			"title": "measurements",
+			"description": "A description of the layers/features/fields in the dataset",
+			"default": [],
+			"examples": [
+				[{
+						"name": "coastal_aerosol",
+						"dtype": "int16",
+						"nodata": -9999,
+						"resampling_method": "nearest",
+						"src_varname": "sr_band1",
+						"zlib": true,
+						"attrs": {
+							"long_name": "Surface Reflectance 0.43-0.45 microns (Coastal Aerosol)",
+							"alias": "band_1"
+						}
+					},
+					{
+						"name": "blue",
+						"dtype": "int16",
+						"nodata": -9999,
+						"resampling_method": "nearest",
+						"src_varname": "sr_band2",
+						"zlib": true,
+						"attrs": {
+							"long_name": "Surface Reflectance 0.45-0.51 microns (Blue)",
+							"alias": "band_2"
+						}
+					}
+				]
+			],
+			"additionalItems": true,
+			"items": {
+				"$id": "#/properties/measurements/items",
+				"anyOf": [{
+					"$id": "#/properties/measurements/items/anyOf/0",
+					"type": "object",
+					"title": "The first anyOf schema",
+					"description": "An explanation about the purpose of this instance.",
+					"default": {},
+					"examples": [{
+						"name": "coastal_aerosol",
+						"dtype": "int16",
+						"nodata": -9999,
+						"resampling_method": "nearest",
+						"src_varname": "sr_band1",
+						"zlib": true,
+						"attrs": {
+							"long_name": "Surface Reflectance 0.43-0.45 microns (Coastal Aerosol)",
+							"alias": "band_1"
+						}
+					}],
+					"required": [
+						"name",
+						"dtype",
+						"attrs"
+					],
+					"properties": {
+						"name": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/name",
+							"type": "string",
+							"title": "name",
+							"description": "An explanation about the purpose of this instance.",
+							"default": "",
+							"examples": [
+								"coastal_aerosol"
+							]
+						},
+						"dtype": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/dtype",
+							"type": "string",
+							"title": "dtype",
+							"description": "An explanation about the purpose of this instance.",
+							"default": "",
+							"examples": [
+								"int16"
+							]
+						},
+						"nodata": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/nodata",
+							"type": "integer",
+							"title": "nodata",
+							"description": "An explanation about the purpose of this instance.",
+							"default": 0,
+							"examples": [
+								-9999
+							]
+						},
+						"resampling_method": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/resampling_method",
+							"type": "string",
+							"title": "resampling_method",
+							"description": "An explanation about the purpose of this instance.",
+							"default": "",
+							"examples": [
+								"nearest"
+							]
+						},
+						"src_varname": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/src_varname",
+							"type": "string",
+							"title": "src_varname",
+							"description": "An explanation about the purpose of this instance.",
+							"default": "",
+							"examples": [
+								"sr_band1"
+							]
+						},
+						"zlib": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/zlib",
+							"type": "boolean",
+							"title": "zlib",
+							"description": "An explanation about the purpose of this instance.",
+							"default": false,
+							"examples": [
+								true
+							]
+						},
+						"attrs": {
+							"$id": "#/properties/measurements/items/anyOf/0/properties/attrs",
+							"type": "object",
+							"title": "attrs",
+							"description": "An explanation about the purpose of this instance.",
+							"default": {},
+							"examples": [{
+								"long_name": "Surface Reflectance 0.43-0.45 microns (Coastal Aerosol)",
+								"alias": "band_1"
+							}],
+							"additionalProperties": true
+						}
+					},
+					"additionalProperties": true
+				}]
+			}
+		},
+		"lineage": {
+			"$id": "#/properties/lineage",
+			"type": "object",
+			"title": "lineage",
+			"description": "The lineage (provenance) of the dataset ",
+			"default": {},
+			"examples": [{
+				"description": "",
+				"source": "<URI for the source file>",
+				"process": "LaSRC"
+			}],
+			"required": [
+				"description",
+				"source",
+				"process"
+			],
+			"properties": {
+				"description": {
+					"$id": "#/properties/lineage/properties/description",
+					"type": "string",
+					"title": "description",
+					"description": "A description of the source and the steps to produce this dataset.",
+					"default": "",
+					"examples": [
+						""
+					]
+				},
+				"source": {
+					"$id": "#/properties/lineage/properties/source",
+					"type": "string",
+					"title": "source",
+					"description": "The source data used to create this dataset, e.g. a URL.",
+					"default": "",
+					"examples": [
+						"<URI for the source file>"
+					]
+				},
+				"process": {
+					"$id": "#/properties/lineage/properties/process",
+					"type": "string",
+					"title": "process",
+					"description": "The process (e.g. software and parameters) used to transform the source dataset to create this one",
+					"default": "",
+					"examples": [
+						"LaSRC"
+					]
+				}
+			},
+			"additionalProperties": true
+		}
+	},
+	"additionalProperties": true
+}
