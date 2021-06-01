@@ -108,8 +108,11 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
             for document in metadata_gen:
                 if isinstance(document, list):
                     for _d in document:
+                        _fnparts = mfile.split("/")
                         _d["metadata_hash"] = hash_doc(_d)
                         _d["metadata_folder"] = folder
+                        _d["folder_category"] = _fnparts[0]
+                        _d["folder_subcategory"] = _fnparts[1]
                     metadata_list.extend(document)
                 else:
                     document["metadata_hash"] = hash_doc(document)

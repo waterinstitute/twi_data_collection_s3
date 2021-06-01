@@ -12,3 +12,4 @@ click
 arcgis
 pyyaml
 descartes
+jsonschema
