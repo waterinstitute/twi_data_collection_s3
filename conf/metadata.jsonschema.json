@@ -1,6 +1,52 @@
 {
 	"$id": "http://example.com/example.json",
 	"$schema": "http://json-schema.org/draft-07/schema",
+	"definitions": {
+		"lineage_entry": {
+			"type": "object",
+			"examples": [{
+				"description": "",
+				"source": "<URI for the source file>",
+				"process": "LaSRC"
+			}],
+			"required": [
+				"description",
+				"source",
+				"process"
+			],
+			"properties": {
+				"description": {
+					"type": "string",
+					"title": "description",
+					"description": "A description of the source and the steps to produce this dataset.",
+					"default": "",
+					"examples": [
+						""
+					]
+				},
+				"source": {
+					"type": "string",
+					"title": "source",
+					"description": "The source data used to create this dataset, e.g. a URL.",
+					"default": "",
+					"examples": [
+						"<URI for the source file>"
+					]
+				},
+				"process": {
+					"type": "string",
+					"title": "process",
+					"description": "The process (e.g. software and parameters) used to transform the source dataset to create this one",
+					"default": "",
+					"examples": [
+						"LaSRC"
+					]
+				},
+                 "source_list":{"type":"array"}
+			},
+			"additionalProperties": true
+		}
+	},
 	"default": {},
 	"description": "This metadata file will describe one (geographical related) dataset.",
 	"examples": [{
@@ -244,7 +290,9 @@
 	],
 	"title": "Dataset Metadata",
 	"type": "object",
-	"options":{"remove_empty_properties":true},
+	"options": {
+		"remove_empty_properties": true
+	},
 	"properties": {
 		"global_attributes": {
 			"$id": "#/properties/global_attributes",
@@ -286,18 +334,13 @@
 				"cdm_data_type",
 				"keywords",
 				"keywords_vocabulary",
-				"project",
 				"coverage_content_type",
-				"references",
 				"license",
-				"naming_authority",
-				"acknowledgment",
 				"topic",
 				"start_date",
 				"end_date",
 				"creation_date",
-				"published_date",
-				"crs"
+				"published_date"
 			],
 			"properties": {
 				"title": {
@@ -365,6 +408,17 @@
 						"Grid"
 					]
 				},
+				"keywords_vocabulary": {
+					"$id": "#/properties/global_attributes/properties/keywords_vocabulary",
+					"type": "string",
+					"title": "keywords_vocabulary",
+					"description": "The data vocabulary used to select the keywords, e.g GCMD https://earthdata.nasa.gov/earth-observation-data/find-data/gcmd/gcmd-keywords, ISO 19115 Topic Category https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=15, USGS Thesaurus https://apps.usgs.gov/thesaurus/thesaurus-full.php",
+					"default": "GCMD",
+					"enum": ["GCMD", "ISO 19115 Topic Category", "USGS Thesaurus"],
+					"examples": [
+						"GCMD"
+					]
+				},
 				"keywords": {
 					"$id": "#/properties/global_attributes/properties/keywords",
 					"type": "string",
@@ -376,17 +430,7 @@
 						"AU/GA,NASA/GSFC/SED/ESD/LANDSAT,REFLECTANCE,ETM+,TM,OLI,EARTH SCIENCE"
 					]
 				},
-				"keywords_vocabulary": {
-					"$id": "#/properties/global_attributes/properties/keywords_vocabulary",
-					"type": "string",
-					"title": "keywords_vocabulary",
-					"description": "The data vocabulary used to select the keywords, e.g GCMD https://earthdata.nasa.gov/earth-observation-data/find-data/gcmd/gcmd-keywords",
-					"default": "GCMD",
-					"enum": ["GCMD", "ISO 19115 Topic Category", "USGS Thesaurus"],
-					"examples": [
-						"GCMD"
-					]
-				},
+
 				"platform": {
 					"$id": "#/properties/global_attributes/properties/platform",
 					"type": "string",
@@ -491,6 +535,7 @@
 					"$id": "#/properties/global_attributes/properties/topic",
 					"type": "string",
 					"title": "topic",
+					"default": "others",
 					"description": "High-level geospatial data thematic classification, defined in ISO 19115:2003.",
 					"enum": ["farming", "biota", "boundaries", "climatologyMeteorologyAtmosphere", "economy", "elevation", "environment", "geoscientificInformation", "health", "imageryBaseMapsEarthCover", "intelligenceMilitary", "inlandWaters", "location", "oceans", "planningCadastre", "society", "structure", "transportation", "utilitiesCommunication", "others"],
 					"examples": [
@@ -503,50 +548,53 @@
 					"title": "start_date",
 					"description": "Start date of the period represented by the data",
 					"format": "date",
-					"minLength":1,
-					"default": "2021-01-06",
+					"minLength": 1,
+					"default": "1973-01-01",
 					"examples": [
-						20210106
+						"2021-01-06"
 					]
 				},
 				"end_date": {
 					"$id": "#/properties/global_attributes/properties/end_date",
 					"type": "string",
 					"title": "end_date",
-					"minLength":1,
+					"minLength": 1,
 					"description": "End date of the period represented by the data",
 					"format": "date",
+					"default": "2073-01-01",
 					"examples": [
-						"20210106"
+						"2021-01-06"
 					]
 				},
 				"creation_date": {
 					"$id": "#/properties/global_attributes/properties/creation_date",
 					"type": "string",
 					"title": "creation_date",
-					"minLength":1,
+					"minLength": 1,
 					"format": "date",
 					"description": "When the dataset was created?",
+					"default": "1973-01-01",
 					"examples": [
-						20210111
+						"2021-01-11"
 					]
 				},
 				"published_date": {
 					"$id": "#/properties/global_attributes/properties/published_date",
 					"type": "string",
 					"format": "date",
-					"minLength":1,
+					"minLength": 1,
 					"title": "published_date",
 					"description": "When the dataset was published (on the source)?",
+					"default": "1973-01-01",
 					"examples": [
-						20210112
+						"2021-01-12"
 					]
 				},
 				"crs": {
 					"$id": "#/properties/global_attributes/properties/crs",
 					"type": "string",
 					"title": "crs",
-					"minLength":1,
+					"minLength": 1,
 					"description": "Coordinate reference system, e.g. EPSG:4326",
 					"default": "EPSG:4326",
 					"examples": [
@@ -571,8 +619,8 @@
 			"examples": [
 				80000000
 			],
-			"minLength":4,
-			"maxLength":8,
+			"minLength": 4,
+			"maxLength": 8,
 			"title": "Bounds huc",
 			"type": "string"
 		},
@@ -607,8 +655,8 @@
 					"$id": "#/properties/metadata_contacts/properties/name",
 					"type": "string",
 					"title": "name",
-					"minLength":1,
-					"description": "An explanation about the purpose of this instance.",
+					"minLength": 1,
+					"description": "Name of the person that will be the PoC about the metadata",
 					"default": "",
 					"examples": [
 						"Christian Ariza"
@@ -618,9 +666,9 @@
 					"$id": "#/properties/metadata_contacts/properties/email",
 					"type": "string",
 					"title": "email",
-					"description": "An explanation about the purpose of this instance.",
-					"minLength":1,
-					"format":"email",
+					"description": "Email of the metadata contact",
+					"minLength": 1,
+					"format": "email",
 					"examples": [
 						"carizaporras@NOTSPAMTWI.org"
 					]
@@ -629,8 +677,8 @@
 					"$id": "#/properties/metadata_contacts/properties/role",
 					"type": "string",
 					"title": "role",
-					"description": "An explanation about the purpose of this instance.",
-					"default": "",
+					"description": "The role of the contact",
+					"default": "metadata creator",
 					"examples": [
 						"user"
 					]
@@ -777,54 +825,17 @@
 		},
 		"lineage": {
 			"$id": "#/properties/lineage",
-			"type": "object",
-			"title": "lineage",
-			"description": "The lineage (provenance) of the dataset ",
-			"default": {},
-			"examples": [{
-				"description": "",
-				"source": "<URI for the source file>",
-				"process": "LaSRC"
-			}],
-			"required": [
-				"description",
-				"source",
-				"process"
-			],
-			"properties": {
-				"description": {
-					"$id": "#/properties/lineage/properties/description",
-					"type": "string",
-					"title": "description",
-					"description": "A description of the source and the steps to produce this dataset.",
-					"default": "",
-					"examples": [
-						""
-					]
+			"anyOf": [{
+					"$ref": "#/definitions/lineage_entry"
 				},
-				"source": {
-					"$id": "#/properties/lineage/properties/source",
-					"type": "string",
-					"title": "source",
-					"description": "The source data used to create this dataset, e.g. a URL.",
-					"default": "",
-					"examples": [
-						"<URI for the source file>"
-					]
-				},
-				"process": {
-					"$id": "#/properties/lineage/properties/process",
-					"type": "string",
-					"title": "process",
-					"description": "The process (e.g. software and parameters) used to transform the source dataset to create this one",
-					"default": "",
-					"examples": [
-						"LaSRC"
-					]
+				{
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/lineage_entry"
+					}
 				}
-			},
-			"additionalProperties": true
-		}
-	},
-	"additionalProperties": true
+			]
+		},
+		"additionalProperties": true
+	}
 }

@@ -41,9 +41,14 @@ def huc2geometry(huc_code, hucs_gdf):
         return None
     huc_s = str(int(huc_code))
     huc_type = len(huc_s)
-    if huc_type == 8:
-        return hucs_gdf.loc[hucs_gdf.HUC_8 == huc_s].geometry.values[0]
-    values = hucs_gdf.loc[hucs_gdf[f"HUC_{huc_type}"] == huc_s].geometry.values
+    try:
+        if huc_type == 8:
+            return hucs_gdf.loc[hucs_gdf.HUC_8 == huc_s].geometry.values[0]
+    except IndexError as e:
+        print(f"{e} beacause {huc_s} is not in the gdb")
+        return None
+    print(hucs_gdf.columns)
+    values = hucs_gdf.loc[hucs_gdf[f"HUC_8"].str.startswith(huc_s)].geometry.values
     return ops.unary_union(values)
 
 
@@ -105,10 +110,10 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
         metadata_gen = yaml.load_all(content, Loader=Loader)
         folder = f"s3://{s3_bucket.name}.s3.amazonaws.com/{s3_bucket.name}/{mfile[:mfile.rfind('/')+1]}"
         try:
+            _fnparts = mfile.split("/")
             for document in metadata_gen:
                 if isinstance(document, list):
                     for _d in document:
-                        _fnparts = mfile.split("/")
                         _d["metadata_hash"] = hash_doc(_d)
                         _d["metadata_folder"] = folder
                         _d["folder_category"] = _fnparts[0]
@@ -117,6 +122,8 @@ def get_metadata_from_buckets(project, process_all=True, buckets=None):
                 else:
                     document["metadata_hash"] = hash_doc(document)
                     document["metadata_folder"] = folder
+                    document["folder_category"] = _fnparts[0]
+                    document["folder_subcategory"] = _fnparts[1]
                     metadata_list.append(document)
         except yaml.error.YAMLError:
             print(
@@ -189,5 +196,5 @@ def load_gdb(gdb):
     gdf = geopandas.read_file(gdb)
     if gdf.empty:  # probably is using the USGS dataset
         gdf = geopandas.read_file(gdb, layer="WBDHU8")
-        gdf = gdf.rename(columns={"HUC8": "HUC_8"})
+        gdf = gdf.rename(columns={"HUC8": "HUC_8", "huc8": "HUC_8"})
     return gdf
