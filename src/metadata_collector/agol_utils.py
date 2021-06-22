@@ -1,9 +1,9 @@
 """
 Utilities to work with Arcgis online
 """
-from arcgis import GIS, GeoAccessor
 import tempfile
-import hashlib
+from arcgis import GIS
+from arcgis.features import FeatureLayerCollection
 
 
 def post_gdf_to_agol(
@@ -11,7 +11,6 @@ def post_gdf_to_agol(
     username,
     password,
     feature_layer_name,
-    column_name="geometry",
     folder="/",
     endpoint="https://twiotg.maps.arcgis.com",
     tags=None,
@@ -69,5 +68,6 @@ def post_gdf_to_agol(
                     },
                     data=tmp_geojson.name,
                 )
+                ex_item.publish(overwrite=True)
     except Exception as _e:
         print(f"error publishing to AGOL {str(_e)}")

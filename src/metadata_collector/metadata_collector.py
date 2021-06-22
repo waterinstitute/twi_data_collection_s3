@@ -39,7 +39,11 @@ def huc2geometry(huc_code, hucs_gdf):
     """
     if pd.isna(huc_code):
         return None
-    huc_s = str(int(huc_code))
+    try:
+        huc_s = str(int(huc_code))
+    except ValueError:
+        print(f"{huc_code} is not a valid huc")
+        return None
     huc_type = len(huc_s)
     try:
         if huc_type == 8:
@@ -47,8 +51,7 @@ def huc2geometry(huc_code, hucs_gdf):
     except IndexError as e:
         print(f"{e} beacause {huc_s} is not in the gdb")
         return None
-    print(hucs_gdf.columns)
-    values = hucs_gdf.loc[hucs_gdf[f"HUC_8"].str.startswith(huc_s)].geometry.values
+    values = hucs_gdf.loc[hucs_gdf["HUC_8"].str.startswith(huc_s)].geometry.values
     return ops.unary_union(values)
 
 
@@ -174,6 +177,10 @@ def generate_geodataframe(
     )
     metadata_df["name"] = metadata_df["global_attributes.title"]
     metadata_gdf = geopandas.GeoDataFrame(metadata_df, geometry=metadata_df.limits)
+    non_valid = metadata_gdf.loc[metadata_gdf.limits.isna()]
+    if not non_valid.empty:
+        print("Some datasets doesn't have a valid location")
+        print(non_valid.metadata_folder.values)
     metadata_gdf = metadata_gdf.drop(
         columns=["limits", "bounds_wkt"], errors="ignore"
     )  # ignore if they don't exists
