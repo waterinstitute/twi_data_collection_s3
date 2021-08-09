@@ -1,0 +1,5 @@
+#!/bin/bash
+SCRIPTPATH=$(dirname "$(realpath -s "$0")")
+mkdir -p "$SCRIPTPATH/../log/"
+cd "$SCRIPTPATH/../"
+bash "$SCRIPTPATH/run_collector.sh" --process_all --project GLO --hucs_gdb "$SCRIPTPATH/../data/WBD_12_HU2_GDB.gdb"  >>"$SCRIPTPATH/../log/cronGLO.log" 2>&1

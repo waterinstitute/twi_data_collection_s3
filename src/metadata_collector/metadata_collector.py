@@ -48,10 +48,18 @@ def huc2geometry(huc_code, hucs_gdf):
     try:
         if huc_type == 8:
             return hucs_gdf.loc[hucs_gdf.HUC_8 == huc_s].geometry.values[0]
+        if huc_type < 8:
+            values = hucs_gdf.loc[
+                hucs_gdf["HUC_8"].str.startswith(huc_s, na=False)
+            ].geometry.values
+        else:
+            values = hucs_gdf.loc[
+                hucs_gdf["HUC_12"].str.startswith(huc_s, na=False)
+            ].geometry.values
     except IndexError as e:
         print(f"{e} beacause {huc_s} is not in the gdb")
         return None
-    values = hucs_gdf.loc[hucs_gdf["HUC_8"].str.startswith(huc_s)].geometry.values
+
     return ops.unary_union(values)
 
 
@@ -191,8 +199,11 @@ def generate_geodataframe(
         )
     for col in metadata_gdf:
         metadata_gdf[col] = metadata_gdf[col].apply(
-            lambda x: x if not isinstance(x, list) else json.dumps(x, default=str)
+            lambda x: x
+            if not (isinstance(x, list) or isinstance(x, dict))
+            else json.dumps(x, default=str)
         )
+    metadata_gdf.columns = [x.replace(".", "_") for x in metadata_gdf.columns]
     return metadata_gdf
 
 
@@ -203,5 +214,31 @@ def load_gdb(gdb):
     gdf = geopandas.read_file(gdb)
     if gdf.empty:  # probably is using the USGS dataset
         gdf = geopandas.read_file(gdb, layer="WBDHU8")
-        gdf = gdf.rename(columns={"HUC8": "HUC_8", "huc8": "HUC_8"})
+        gdf = gdf.rename(
+            columns={
+                "HUC8": "HUC_8",
+                "huc8": "HUC_8",
+                "huc12": "HUC_12",
+                "HUC12": "HUC_12",
+            }
+        )
+        try:
+            gdf2 = geopandas.read_file(gdb, layer="WBDHU12")
+            gdf2 = gdf2.rename(
+                columns={
+                    "HUC8": "HUC_8",
+                    "huc8": "HUC_8",
+                    "huc12": "HUC_12",
+                    "HUC12": "HUC_12",
+                }
+            )
+            gdf = geopandas.GeoDataFrame(
+                pd.concat([gdf, gdf2], axis=0, ignore_index=True), crs=gdf.crs
+            )
+            gdf["HUC_8"] = gdf["HUC_8"].fillna(-1)
+            gdf["HUC_12"] = gdf["HUC_12"].fillna(-1)
+            print(f"adding the gdb {gdf.columns}")
+        except Exception as e:
+            print(e)
+            pass
     return gdf

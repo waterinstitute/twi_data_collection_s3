@@ -108,7 +108,12 @@ def metadata_collector(
         output_format = "ESRI Shapefile"
     else:
         file_extension = output_format.lower()
-    metadata_gdf.to_file(f"{output_name}.{file_extension}", driver=output_format)
+    xargs = {}
+    if output_format == "GeoJSON":
+        xargs["na"] = "drop"
+    metadata_gdf.to_file(
+        f"{output_name}.{file_extension}", driver=output_format, **xargs
+    )
     if generate_plot:
         # all the rows should have the same projection,
         # so this change should be either enforced by policy or made beforehand
